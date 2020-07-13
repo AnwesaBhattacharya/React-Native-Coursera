@@ -1,0 +1,12 @@
+{
+  "name": "confusion-native",
+  "displayName": "confusion-native",
+  "expo": {
+    "name": "confusion-native",
+    "slug": "confusion-native",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

@@ -10,6 +10,25 @@ import { createAppContainer } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import About from './AboutComponent';
 import Contact from './ContactComponent';
+import { connect } from 'react-redux';
+import { fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
+
+const mapStateToProps = state => {
+  return {
+    dishes: state.dishes,
+    comments: state.comments,
+    promotions: state.promotions,
+    leaders: state.leaders
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  fetchDishes: () => dispatch(fetchDishes()),
+  fetchComments: () => dispatch(fetchComments()),
+  fetchPromos: () => dispatch(fetchPromos()),
+  fetchLeaders: () => dispatch(fetchLeaders()),
+})
+
 
 const HomeNavigator = createStackNavigator({
     Home: { screen: Home }
@@ -174,16 +193,12 @@ const MainNavigator = createDrawerNavigator({
 const MainNavigatorContainer=createAppContainer(MainNavigator);
 
 class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dishes: DISHES,
-      selectedDish: null
-    };
-  }
-
-  onDishSelect(dishId) {
-      this.setState({selectedDish: dishId})
+  
+  componentDidMount() {
+    this.props.fetchDishes();
+    this.props.fetchComments();
+    this.props.fetchPromos();
+    this.props.fetchLeaders();
   }
 
   render() {
@@ -221,4 +236,4 @@ const styles = StyleSheet.create({
 });
 
   
-export default Main;
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

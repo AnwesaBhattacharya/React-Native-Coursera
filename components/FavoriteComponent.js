@@ -59,6 +59,7 @@ class Favorites extends Component {
             ];
 
             return (
+                <Swipeout right={rightButton} autoClose={true}>
                 <Animatable.View animation="fadeInRightBig" duration={2000}>                
                     <ListItem
                         key={index}
@@ -69,9 +70,11 @@ class Favorites extends Component {
                         leftAvatar={{ source: {uri: baseUrl + item.image}}}
                         />
                 </Animatable.View>
+                </Swipeout>
             );
-            );
-        };
+            
+        }
+
         if (this.props.dishes.isLoading) {
             return(
                 <Loading />

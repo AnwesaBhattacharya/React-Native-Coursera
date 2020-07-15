@@ -34,6 +34,13 @@ function RenderDish(props) {
             return false;
     };
 
+    const recognizeComment = ({ moveX, moveY, dx, dy }) => {
+        if ( dx > 150 )
+            return true;
+        else
+            return false;
+    };
+
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => {
             return true;
@@ -52,6 +59,9 @@ function RenderDish(props) {
                     ],
                     { cancelable: false }
                 );
+
+            if(recognizeComment(gestureState))
+                props.onPressComment();
 
             return true;
         }
@@ -121,7 +131,7 @@ function RenderComments(props) {
     };
     
     return (
-        Animatable.View animation="fadeInUp" duration={2000} delay={1000}>        
+        <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>        
         <Card title='Comments' >
             <FlatList 
                 data={comments}

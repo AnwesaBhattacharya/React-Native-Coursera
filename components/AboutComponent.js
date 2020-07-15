@@ -46,8 +46,8 @@ class About extends Component {
         );
     };
 
-        return (
-            if (this.props.leaders.isLoading) {
+        
+        if (this.props.leaders.isLoading) {
             return(
                 <ScrollView>
                     <History />
@@ -85,7 +85,7 @@ class About extends Component {
             );
         }
             
-    );
+    
     }
 }
 

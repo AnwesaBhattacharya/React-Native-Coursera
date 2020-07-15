@@ -52,9 +52,6 @@ function RenderItem(props) {
 
 class Home extends Component {
 
-    constructor(props) {
-        super(props);
-    }
 
     static navigationOptions = {
         title: 'Home',
@@ -82,4 +79,4 @@ class Home extends Component {
 }
 
 
-export default Home;
+export default connect(mapStateToProps)(Home);

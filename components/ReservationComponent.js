@@ -3,7 +3,10 @@ import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button, Modal, Aler
 import { Card } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 import * as Animatable from 'react-native-animatable';
-import { Permissions, Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
+import *  as Notifications from 'expo-notifications';
+import * as Calendar from 'expo-calendar';
+//import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 class Reservation extends Component {
@@ -22,15 +25,6 @@ class Reservation extends Component {
     static navigationOptions = {
         title: 'Reserve Table',
     };
-
-    handleReservation() {
-        console.log(JSON.stringify(this.state));
-        this.setState({
-            guests: 1,
-            smoking: false,
-            date: ''
-        });
-    }
 
 
     toggleModal() {
@@ -52,6 +46,7 @@ class Reservation extends Component {
                                     text: 'OK',
                                     onPress: () => {
                                         this.presentLocalNotification(this.state.date);
+                                        this.addReservationToCalendar(this.state.date);
                                         this.resetForm();
                                     }
 
@@ -97,7 +92,51 @@ class Reservation extends Component {
         });
     }
 
+    async obtainCalendarPermission() {
+        let permission = await Permissions.getAsync(Permissions.CALENDAR);
+        if (permission.status !== 'granted') {
+            permission = await Permissions.askAsync(Permissions.CALENDAR);
+            if (permission.status !== 'granted') {
+                Alert.alert('Permission not granted to access Calendar');
+            }
+        }
+        return permission;
+    }
+
+    async addReservationToCalendar(date) {
+        await this.obtainCalendarPermission();
+        const calendars = await Calendar.getCalendarsAsync();
+        const calendar = calendars.find(({isPrimary})=>isPrimary);
+        console.log(calendar);
+
+        var start=new Date(Date.parse(date));
+        var end =new Date((Date.parse(date)+7200000));
+        const details = {
+            title: "Con Fusion Table Reservation",
+            startDate: start,
+            endDate: end,
+            location: "121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kong",            
+            timeZone: "Asia/Hong_Kong"
+        };
+
+        try {
+            console.log('Event Added');
+
+            const eventId = await Calendar.createEventAsync(calendar, details);
+
+            console.log("Event Id", eventId);
+            }
+        catch(error) {
+            console.log('Error', error);
+            }
+
+    }
+
     render() {
+
+        const minDate= new Date(2017, 1, 1);
+        const iniDate= new Date();
+
         return(
             <Animatable.View animation="zoomIn" duration={2000}>      
                 <View style={styles.formRow}>
@@ -127,10 +166,11 @@ class Reservation extends Component {
                 <Text style={styles.formLabel}>Date and Time</Text>
                 <DatePicker
                     style={{flex: 2, marginRight: 20}}
-                    date={this.state.date}
+                    display="default"
+                    value={this.state.date}
                     format=''
                     mode="datetime"
-                    placeholder="select date and Time"
+                    placeholder="Select date and Time"
                     minDate="2017-01-01"
                     confirmBtnText="Confirm"
                     cancelBtnText="Cancel"
@@ -147,7 +187,7 @@ class Reservation extends Component {
                     // ... You can check the source to find the other keys. 
                     }}
                     onDateChange={(date) => {this.setState({date: date})}}
-                />
+                /> 
                 </View>
                 <View style={styles.formRow}>
                 <Button

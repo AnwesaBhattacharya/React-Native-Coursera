@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Menu from './MenuComponent';
 import { DISHES } from '../shared/dishes';
 import DishDetail from './DishdetailComponent';
-import { View, Platform, Text, ScrollView, Image, StyleSheet, NetInfo, ToastAndroid } from 'react-native';
+import { View, Platform, Text, ScrollView, Image, StyleSheet, SafeAreaView } from 'react-native';
+//import { ToastAndroid } from 'react-native';
 import Home from './HomeComponent';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -14,6 +15,7 @@ import { connect } from 'react-redux';
 import { fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
 import Reservation from './ReservationComponent';
 import Favorites from './FavoriteComponent';
+//import NetInfo from '@react-native-community/netinfo';
 import Login from './LoginComponent';
 
 const mapStateToProps = state => {
@@ -33,7 +35,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const LoginNavigator = createStackNavigator({
-      Login: Login
+      Login: Login 
     }, {
     navigationOptions: ({ navigation }) => ({
       headerStyle: {
@@ -48,7 +50,7 @@ const LoginNavigator = createStackNavigator({
         iconStyle={{ color: 'white' }} 
         onPress={ () => navigation.toggleDrawer() } />    
     })
-  });
+  }); 
 
 
 const HomeNavigator = createStackNavigator({
@@ -191,7 +193,7 @@ const MainNavigator = createDrawerNavigator({
         />
       ),
     }
-  },
+  }, 
     Home: 
       { screen: HomeNavigator,
         navigationOptions: {
@@ -299,8 +301,10 @@ class Main extends Component {
     this.props.fetchComments();
     this.props.fetchPromos();
     this.props.fetchLeaders();
+  }
   
-    NetInfo.getConnectionInfo()
+  
+/*    NetInfo.getConnectionInfo()
         .then((connectionInfo) => {
             ToastAndroid.show('Initial Network Connectivity Type: '
                 + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType,
@@ -332,6 +336,7 @@ class Main extends Component {
         break;
     }
   }
+*/  
 
   render() {
  
